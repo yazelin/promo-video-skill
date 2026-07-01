@@ -16,17 +16,24 @@ const HIDE = "#hud,#panel,#controls{display:none!important}";  // 要藏的 UI s
 const SHOTS = [
   { id: "shot1", url: "/play.html?scene=climax", hold: 9000 },
 ];
-// app-specific:載入完成後怎麼開始播 + 跳到高潮。改這裡對接你的 app。
-async function DRIVE(page, shot) {
-  // 例(戰場編輯器):等時間軸節點出現 → 點自動播 → 點第 N 個節點跳幕
-  for (let t = 0; t < 40; t++) {
-    if (await page.evaluate(() => document.querySelectorAll("#tlNodes .node").length) > 0) break;
+// GOTCHA 15:別用固定秒數等載入,慢的那張會截到「載入中」空畫面。輪詢到 loading 消失才動。
+async function waitLoaded(page, { gone = "載入中", sel = null, max = 15000 } = {}) {
+  for (let t = 0; t < max / 250; t++) {
+    const ready = sel
+      ? await page.evaluate(s => document.querySelectorAll(s).length > 0, sel)
+      : await page.evaluate(g => !document.body.innerText.includes(g), gone);
+    if (ready) return;
     await page.waitForTimeout(250);
   }
+}
+// app-specific:載入完成後怎麼開始播 + 跳到高潮。改這裡對接你的 app。
+async function DRIVE(page, shot) {
+  await waitLoaded(page, { sel: "#tlNodes .node" });   // 例:等時間軸節點出現(或改 {gone:'載入中'})
   await page.evaluate(() => document.getElementById("btnAuto")?.click());
   await page.waitForTimeout(700);
   // await page.evaluate(i => document.querySelectorAll("#tlNodes .node")[i]?.click(), shot.phase);
 }
+// 截圖/錄完後,MODE B 端務必逐張量目標區 stdev(≈0=空)自動抓漏重截。
 // ─────────────────────────────────────────────────
 
 import { chromium } from "playwright";
