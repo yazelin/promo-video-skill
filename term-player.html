@@ -26,6 +26,7 @@ async function type(el,text,ms){ // 逐字打字 + 游標
 async function run(script){
   const t0=performance.now(); window.__STEPLOG=[];   // 記每步輸出出現時間(秒),給旁白對時
   for(let idx=0; idx<script.length; idx++){ const step=script[idx];
+    if(step.clear!==false) T.innerHTML='';   // 每步清空螢幕,避免累加超出視窗(旁白講的指令才單獨滿版可見)
     const cl=line(''); await type(cl, step.cmd, step.typeMs||55);
     await sleep(step.gapMs||350);
     for(const o of (step.out||[])){ line(o); await sleep(step.lineMs||90); }
