@@ -20,11 +20,12 @@ description: Zero-cost promo video / trailer / social ad for a web project (cine
 3. **Verify**(選)— Gemini pro 代聽逐字驗聲調;Gemini flash 海選配樂。
 4. **Compose** — `brand.py` 產品牌素材(字卡/角標/CTA/QR),ffmpeg 疊字幕/串接/混音,出多比例 + 濃縮版。
 
-## 這裡的三個模板(改頂部 config 就能用)
+## 這裡的四個模板(改頂部 config / 傳參數就能用)
 
 - `brand.py` — PIL:**cover/contain 守比例合成器**、字卡、常駐角標、CTA 卡、mini 圖庫、QR(走 API)。
 - `kenburns.sh` — **無抖動 Ken Burns** clip + **文字貼圖緣** + concat + 混音(MODE B 主力)。
-- `capture-app.mjs` — Playwright+xvfb 螢幕錄(MODE A);內建 http server、藏 HUD、點時間軸節點跳段。
+- `capture-app.mjs` — Playwright+xvfb 螢幕錄(MODE A);內建 http server、藏 HUD、點節點跳段 / 鍵盤驅動遊戲。
+- `audition.py` — Gemini 代聽:`music "<用途>" *.mp3`(海選配樂 fit 0-10)、`tone "<文字>" v.mp3`(驗旁白聲調)。
 
 ## GOTCHAS —— 這份是最值錢的資產,每次照它檢查
 
