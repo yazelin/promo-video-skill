@@ -11,7 +11,7 @@ description: Zero-cost promo video / trailer / social ad / explainer for any rep
 
 - **會動的 app**(3D/canvas/自動運鏡、有 auto-play)→ **MODE A 螢幕錄**(`capture-app.mjs`)。
 - **出圖 / 圖庫 / 相片 feed**(AI 生成圖、gallery)→ **MODE B Ken Burns montage**(下載精選圖 + `kenburns.sh`)。
-- **非視覺 repo**(CLI / library / API / backend / 資料管線,沒畫面可錄)→ **MODE C 終端/解說**(`term-player.html` + `capture-term.mjs`):把「指令 + 真實輸出」做成打字動畫的終端錄影,再進 compose(標題 + 解說字幕 + CTA)。實戰:wip(跨 repo 狀態 CLI)解說片。
+- **非視覺 repo**(CLI / library / API / backend / 資料管線,沒畫面可錄)→ **MODE C 終端/解說**(`term-player.html` + `capture-term.mjs`):把「指令 + 真實輸出」做成打字動畫的終端錄影。**dev 工具要做「旁白教學版」不是「快切預告」**(見 GOTCHA 22):結構 = 痛點 hook → 逐步驟(裝→跑→讀懂輸出→進階指令)+ edge-tts 旁白一步步講 + 步驟字幕 → CTA。旁白對時靠 `term-player.html` 的 `window.__STEPLOG`(每步輸出出現的秒數),compose 把每句旁白 adelay 到對應步驟。實戰:wip 跨-repo 狀態 CLI 教學片(~60s,配樂壓 0.13 讓旁白為主)。
 - 混合:screen-record 當主體、Ken Burns / 終端 當補充,都行。
 
 ## 四階段
@@ -52,6 +52,7 @@ description: Zero-cost promo video / trailer / social ad / explainer for any rep
 19. **「就緒」畫面在錄影尾段**:recordVideo 從 load 起錄,PREPARING→START 的 ready 出現在**後段**;錄夠長(等到 START + 多停 3s),trim **從尾段**取 ready 那截,別從頭(截到 loading)。
 20. **手機直式 viewport 常更好**:遊戲 mobile layout 有時更滿版、甚至行為不同(roll-formosa 直式 gameplay 球會長大、橫式卡住)。每比例原生重錄時,順便看哪個 viewport 表現最好。
 21. **文案精準**:主角/物件介紹用**個性/怪癖**不用外觀(catime 卡司);廣告的「新聞→圖」一行字要從**來源資料的 idea/story 欄推**,別腦補(掛錯新聞會出糗)。
+22. **預告 ≠ 教學,別搞錯格式**:視覺專案(遊戲/app)適合 15-20s 快切**預告**(tease、抓注意);但 CLI/dev 工具做快切預告會**很無聊、沒教學感**——要做 ~60-90s **旁白教學**:痛點 hook →`裝→跑→讀懂輸出→進階`逐步驟 + edge-tts 一步步講(慢、每步停夠久)+ 步驟字幕 → CTA,配樂壓很低(~0.13)讓旁白為主。實戰:wip 第一版快切被嫌無聊,改旁白教學版才有「懂了、我會用」的實感。旁白對時用 term-player 的 `__STEPLOG`。edge-tts 唸英文術語(wip/cargo/markdown/Claude Code)其實 OK,用 Gemini 確認過。
 
 ## Config 表面(每專案換這些)
 

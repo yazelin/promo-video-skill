@@ -24,13 +24,14 @@ async function type(el,text,ms){ // 逐字打字 + 游標
   el.innerHTML='<span class="prompt">$ </span><span class="cmd">'+text+'</span>';
 }
 async function run(script){
-  for(const step of script){
+  const t0=performance.now(); window.__STEPLOG=[];   // 記每步輸出出現時間(秒),給旁白對時
+  for(let idx=0; idx<script.length; idx++){ const step=script[idx];
     const cl=line(''); await type(cl, step.cmd, step.typeMs||55);
     await sleep(step.gapMs||350);
     for(const o of (step.out||[])){ line(o); await sleep(step.lineMs||90); }
+    window.__STEPLOG.push({i:idx, outAt:(performance.now()-t0)/1000});
     line('&nbsp;');
-    // 內容超高就往上捲(保持最新可見)
-    T.scrollTop=T.scrollHeight;
+    T.scrollTop=T.scrollHeight;   // 內容超高就往上捲
     await sleep(step.holdMs||1800);
   }
   window.__TERM_DONE=true;
