@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><title>term</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0e14;overflow:hidden}
+  #term{box-sizing:border-box;width:100%;height:100%;padding:48px 56px;
+    font-family:'DejaVu Sans Mono','Noto Sans Mono CJK TC','Noto Sans TC',monospace;
+    font-size:26px;line-height:1.5;color:#d8dee9;white-space:pre-wrap;word-break:break-word}
+  .prompt{color:#e8b64c;font-weight:700}          /* $ 金色 */
+  .cmd{color:#eceff4;font-weight:700}
+  .c{color:#40e0d0}   /* cyan 分支 */
+  .d{color:#6b7488}   /* dim */
+  .r{color:#e64a4a;font-weight:700}   /* red dirty/crash */
+  .g{color:#46c878}   /* green */
+  .y{color:#e8b64c}   /* gold */
+  .cur{background:#e8b64c;color:#0b0e14;animation:bl 1s steps(1) infinite}
+  @keyframes bl{50%{opacity:0}}
+</style></head>
+<body><div id="term"></div>
+<script>
+const T=document.getElementById('term');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function line(html){const d=document.createElement('div');d.innerHTML=html;T.appendChild(d);return d;}
+async function type(el,text,ms){ // 逐字打字 + 游標
+  for(let i=0;i<text.length;i++){ el.innerHTML='<span class="prompt">$ </span><span class="cmd">'+text.slice(0,i+1)+'</span><span class="cur">&nbsp;</span>'; await sleep(ms);}
+  el.innerHTML='<span class="prompt">$ </span><span class="cmd">'+text+'</span>';
+}
+async function run(script){
+  for(const step of script){
+    const cl=line(''); await type(cl, step.cmd, step.typeMs||55);
+    await sleep(step.gapMs||350);
+    for(const o of (step.out||[])){ line(o); await sleep(step.lineMs||90); }
+    line('&nbsp;');
+    // 內容超高就往上捲(保持最新可見)
+    T.scrollTop=T.scrollHeight;
+    await sleep(step.holdMs||1800);
+  }
+  window.__TERM_DONE=true;
+}
+// 由 capture 端注入 window.TERM_SCRIPT;沒有就示範
+run(window.TERM_SCRIPT || [{cmd:'echo hello',out:['hello'],holdMs:1500}]);
+</script></body></html>

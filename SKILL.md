@@ -1,6 +1,6 @@
 ---
 name: promo-video
-description: Zero-cost promo video / trailer / social ad for a web project (cinematic web app, game, or an image feed/gallery), driving traffic to a site or Telegram/social. Use when the user wants a trailer, promo, teaser, or ad made from an existing web app or a generated-image feed — outputs multi-aspect (16:9/9:16/1:1/4:5) with narration, captions, brand tag and CTA. All free: screen-capture or Ken Burns + edge-tts + Gemini audition + ffmpeg. No paid APIs.
+description: Zero-cost promo video / trailer / social ad / explainer for any repo — a cinematic web app or game (screen-record), an image feed/gallery (Ken Burns montage), OR a non-visual CLI/library/backend (animated terminal explainer). Drives traffic to a site, Telegram, or GitHub. Use when the user wants a trailer, promo, teaser, ad, or explainer video for a project — outputs multi-aspect (16:9/9:16/1:1/4:5) with narration, captions, brand tag and CTA. All free: screen-capture / Ken Burns / terminal-player + edge-tts + Gemini audition + ffmpeg. No paid APIs.
 ---
 
 # promo-video — 零成本宣傳片 / 廣告管線
@@ -11,7 +11,8 @@ description: Zero-cost promo video / trailer / social ad for a web project (cine
 
 - **會動的 app**(3D/canvas/自動運鏡、有 auto-play)→ **MODE A 螢幕錄**(`capture-app.mjs`)。
 - **出圖 / 圖庫 / 相片 feed**(AI 生成圖、gallery)→ **MODE B Ken Burns montage**(下載精選圖 + `kenburns.sh`)。
-- 混合:screen-record 當主體、Ken Burns 當補充,都行。
+- **非視覺 repo**(CLI / library / API / backend / 資料管線,沒畫面可錄)→ **MODE C 終端/解說**(`term-player.html` + `capture-term.mjs`):把「指令 + 真實輸出」做成打字動畫的終端錄影,再進 compose(標題 + 解說字幕 + CTA)。實戰:wip(跨 repo 狀態 CLI)解說片。
+- 混合:screen-record 當主體、Ken Burns / 終端 當補充,都行。
 
 ## 四階段
 
@@ -20,11 +21,12 @@ description: Zero-cost promo video / trailer / social ad for a web project (cine
 3. **Verify**(選)— Gemini pro 代聽逐字驗聲調;Gemini flash 海選配樂。
 4. **Compose** — `brand.py` 產品牌素材(字卡/角標/CTA/QR),ffmpeg 疊字幕/串接/混音,出多比例 + 濃縮版。
 
-## 這裡的四個模板(改頂部 config / 傳參數就能用)
+## 這裡的六個模板(改頂部 config / 傳參數就能用)
 
 - `brand.py` — PIL:**cover/contain 守比例合成器**、字卡、常駐角標、CTA 卡、mini 圖庫、QR(走 API)。
 - `kenburns.sh` — **無抖動 Ken Burns** clip + **文字貼圖緣** + concat + 混音(MODE B 主力)。
 - `capture-app.mjs` — Playwright+xvfb 螢幕錄(MODE A);內建 http server、藏 HUD、點節點跳段 / 鍵盤驅動遊戲。
+- `term-player.html` + `capture-term.mjs` — **MODE C 終端/解說**:HTML 終端播放器(打字動畫+彩色輸出)+ xvfb 錄。無需 asciinema/xterm。
 - `audition.py` — Gemini 代聽:`music "<用途>" *.mp3`(海選配樂 fit 0-10)、`tone "<文字>" v.mp3`(驗旁白聲調)。
 
 ## GOTCHAS —— 這份是最值錢的資產,每次照它檢查
