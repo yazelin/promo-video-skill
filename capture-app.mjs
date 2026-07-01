@@ -33,6 +33,14 @@ async function DRIVE(page, shot) {
   await page.waitForTimeout(700);
   // await page.evaluate(i => document.querySelectorAll("#tlNodes .node")[i]?.click(), shot.phase);
 }
+// GOTCHA 17:互動遊戲沒 auto-play → 送鍵盤自己玩。範例(Katamari 類):
+//   const hold = async (p,k,ms)=>{ await p.keyboard.down(k); await p.waitForTimeout(ms); await p.keyboard.up(k); };
+//   await waitLoaded(page, { gone: "PREPARING" });                       // 等預快取完 START 才 ready
+//   try { await page.getByText("START",{exact:false}).first().click(); } // 點開始
+//   catch { await page.mouse.click(vp.width/2, vp.height*0.25); }
+//   await page.waitForTimeout(1500);
+//   for (const [k,ms] of [["ArrowUp",2600],["ArrowRight",1400],["ArrowUp",2400]]) await hold(page,k,ms);
+//   // 遊戲常 load 後 ~10s 才真開始;trim gameplay 挑「球夠大/物件多」的窗(GOTCHA 17)。
 // 截圖/錄完後,MODE B 端務必逐張量目標區 stdev(≈0=空)自動抓漏重截。
 // ─────────────────────────────────────────────────
 

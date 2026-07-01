@@ -44,6 +44,11 @@ description: Zero-cost promo video / trailer / social ad for a web project (cine
 14. **平台細節**:FB 影片進貼文、**連結放第一則留言**(避免觸及被壓);`+movflags +faststart`;LINE 內嵌播放要用相簿/影片鈕傳,不能用「檔案」。
 15. **截圖要等載入完成 + 逐張驗非空**:MODE A/gallery 逐項截圖**別用固定秒數**(慢的那張會截到「載入中」空畫面)。輪詢到 loading 指示消失才截;截完**逐張量目標區 stdev**(≈0 = 空/沒渲染),自動抓漏的重截。實戰:roll-formosa 苗栗固定 1.8s 截到空白,改 wait-for-load + stdev 掃描補回。
 16. **實際放大看,別只信縮圖**:驗證務必抽**全解析度**單張細看(裁切/糊邊/被切在縮圖看不出)。量座標時對原圖畫 y/x 格線。實戰:地標下緣被裁 55px、下半糊影,都是縮圖看不出、放大畫格線才抓到。
+17. **互動遊戲沒 auto-play → 送鍵盤自己玩**(MODE A 的子模式):Katamari/動作遊戲要用 Playwright `keyboard.down/up` 驅動(按方向鍵滾)。遊戲常在 load 後 ~10s(precache/PREPARING)才真正開始:先 wait-until-START(輪詢按鈕 ready)→ 點 START → 再送鍵。盲 bot 未必吃得到東西/長不大(roll-formosa 橫式卡在 2cm)——**取「最有畫面」的窗**(球夠大/物件多),或改用下條 showcase。
+18. **gameplay 難拍 → 用自走 showcase/gallery 當素材**:很多 app 有「物件圖鑑/預覽」自走頁(如 `preview.html?city=X`),不用玩就渲染全部內容,是可靠 montage 來源(roll-formosa 20 城地標即此)。這些暗底物件**用純暗底、不要模糊背景**(不然糊出鬼影)。
+19. **「就緒」畫面在錄影尾段**:recordVideo 從 load 起錄,PREPARING→START 的 ready 出現在**後段**;錄夠長(等到 START + 多停 3s),trim **從尾段**取 ready 那截,別從頭(截到 loading)。
+20. **手機直式 viewport 常更好**:遊戲 mobile layout 有時更滿版、甚至行為不同(roll-formosa 直式 gameplay 球會長大、橫式卡住)。每比例原生重錄時,順便看哪個 viewport 表現最好。
+21. **文案精準**:主角/物件介紹用**個性/怪癖**不用外觀(catime 卡司);廣告的「新聞→圖」一行字要從**來源資料的 idea/story 欄推**,別腦補(掛錯新聞會出糗)。
 
 ## Config 表面(每專案換這些)
 
