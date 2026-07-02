@@ -52,7 +52,8 @@ description: Zero-cost promo video / trailer / social ad / explainer for any rep
 19. **「就緒」畫面在錄影尾段**:recordVideo 從 load 起錄,PREPARING→START 的 ready 出現在**後段**;錄夠長(等到 START + 多停 3s),trim **從尾段**取 ready 那截,別從頭(截到 loading)。
 20. **手機直式 viewport 常更好**:遊戲 mobile layout 有時更滿版、甚至行為不同(roll-formosa 直式 gameplay 球會長大、橫式卡住)。每比例原生重錄時,順便看哪個 viewport 表現最好。
 21. **文案精準**:主角/物件介紹用**個性/怪癖**不用外觀(catime 卡司);廣告的「新聞→圖」一行字要從**來源資料的 idea/story 欄推**,別腦補(掛錯新聞會出糗)。
-22. **預告 ≠ 教學,別搞錯格式**:視覺專案(遊戲/app)適合 15-20s 快切**預告**(tease、抓注意);但 CLI/dev 工具做快切預告會**很無聊、沒教學感**——要做 ~60-90s **旁白教學**:痛點 hook →`裝→跑→讀懂輸出→進階`逐步驟 + edge-tts 一步步講(慢、每步停夠久)+ 步驟字幕 → CTA,配樂壓很低(~0.13)讓旁白為主。實戰:wip 第一版快切被嫌無聊,改旁白教學版才有「懂了、我會用」的實感。旁白對時用 term-player 的 `__STEPLOG`。edge-tts 唸英文術語(wip/cargo/markdown/Claude Code)其實 OK,用 Gemini 確認過。
+22. **預告 ≠ 教學,別搞錯格式**:視覺專案(遊戲/app)適合 15-20s 快切**預告**(tease、抓注意);但 CLI/dev 工具做快切預告會**很無聊、沒教學感**——要做 ~60-90s **旁白教學**:痛點 hook →`裝→跑→讀懂輸出→進階`逐步驟 + edge-tts 一步步講(慢、每步停夠久)+ 步驟字幕 → CTA,配樂壓很低(~0.13)讓旁白為主。實戰:wip 第一版快切被嫌無聊,改旁白教學版才有「懂了、我會用」的實感。旁白對時用 term-player 的 `__STEPLOG`。term-player 要**每步清空螢幕**(GOTCHA 16 的同源問題:內容累加會寫到視窗外、被講到的指令被推走)。
+23. **先掃完整 README/`--help` 做功能清單,再寫腳本**:做工具教學/解說**別只讀前段就開拍**——會漏掉招牌功能(wip 漏了 `dashboard.py` 視覺儀表板、`wip done`、`--root`、`install-skill`、Codex 支援、`see:` 規劃檔偵測)。先列全功能,再選要演的。**TTS 別硬唸帳號/handle/罕見拼法**(如 `yazelin` 其實是中文名「亞澤林」的拼音,逐字唸很怪)——畫面已有 URL 就讓旁白帶過(「連結在下方」);避開會頓的開頭詞(「先…」→「…很簡單」)。edge-tts 唸一般英文術語(cargo/markdown/Claude Code)反而 OK,用 Gemini flash 聽一句確認。
 
 ## Config 表面(每專案換這些)
 
