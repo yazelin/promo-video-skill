@@ -1,9 +1,18 @@
 <!doctype html><html><head><meta charset="utf-8"><title>term</title>
 <style>
-  html,body{margin:0;height:100%;background:#0b0e14;overflow:hidden}
-  #term{box-sizing:border-box;width:100%;height:100%;padding:48px 56px;
+  html,body{margin:0;height:100%;background:#070a10;overflow:hidden}
+  .stage{height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:64px 96px}
+  .win{width:100%;max-width:1060px;height:568px;background:#0b0e14;border:1px solid #232a38;
+    border-radius:14px;box-shadow:0 32px 90px rgba(0,0,0,.65);overflow:hidden;display:flex;flex-direction:column}
+  .bar{height:46px;flex:0 0 auto;background:#11151d;border-bottom:1px solid #232a38;
+    display:flex;align-items:center;padding:0 18px}
+  .dot{width:13px;height:13px;border-radius:50%;margin-right:9px}
+  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+  .title{color:#6b7488;font-size:15px;margin-left:10px;
+    font-family:'DejaVu Sans Mono','Noto Sans Mono CJK TC',monospace}
+  #term{flex:1;box-sizing:border-box;padding:24px 30px;overflow:hidden;
     font-family:'DejaVu Sans Mono','Noto Sans Mono CJK TC','Noto Sans TC',monospace;
-    font-size:26px;line-height:1.5;color:#d8dee9;white-space:pre-wrap;word-break:break-word}
+    font-size:24px;line-height:1.5;color:#d8dee9;white-space:pre-wrap;word-break:break-word}
   .prompt{color:#e8b64c;font-weight:700}          /* $ 金色 */
   .cmd{color:#eceff4;font-weight:700}
   .c{color:#40e0d0}   /* cyan 分支 */
@@ -14,7 +23,10 @@
   .cur{background:#e8b64c;color:#0b0e14;animation:bl 1s steps(1) infinite}
   @keyframes bl{50%{opacity:0}}
 </style></head>
-<body><div id="term"></div>
+<body><div class="stage"><div class="win">
+  <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">wip — ~/dev</span></div>
+  <div id="term"></div>
+</div></div>
 <script>
 const T=document.getElementById('term');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -26,17 +38,16 @@ async function type(el,text,ms){ // 逐字打字 + 游標
 async function run(script){
   const t0=performance.now(); window.__STEPLOG=[];   // 記每步輸出出現時間(秒),給旁白對時
   for(let idx=0; idx<script.length; idx++){ const step=script[idx];
-    if(step.clear!==false) T.innerHTML='';   // 每步清空螢幕,避免累加超出視窗(旁白講的指令才單獨滿版可見)
+    if(step.clear!==false) T.innerHTML='';   // 每步清空,內容單獨滿版可見
     const cl=line(''); await type(cl, step.cmd, step.typeMs||55);
     await sleep(step.gapMs||350);
     for(const o of (step.out||[])){ line(o); await sleep(step.lineMs||90); }
     window.__STEPLOG.push({i:idx, outAt:(performance.now()-t0)/1000});
     line('&nbsp;');
-    T.scrollTop=T.scrollHeight;   // 內容超高就往上捲
+    T.scrollTop=T.scrollHeight;
     await sleep(step.holdMs||1800);
   }
   window.__TERM_DONE=true;
 }
-// 由 capture 端注入 window.TERM_SCRIPT;沒有就示範
 run(window.TERM_SCRIPT || [{cmd:'echo hello',out:['hello'],holdMs:1500}]);
 </script></body></html>
